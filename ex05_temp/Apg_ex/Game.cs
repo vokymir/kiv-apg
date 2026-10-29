@@ -134,12 +134,12 @@ namespace OpenTK_tutorial
         private void RenderScene()
         {
             // view direction outlines
-            ex05.Draw(view, projection);
+            //ex05.Draw(view, projection);
 
             // frame buffer outlines
-            // ex05.RenderFirstPass(view, projection);
-            // ex05.RenderSecondPass(view, projection);
-            // ex05.RenderThirdPass();
+             ex05.RenderFirstPass(view, projection);
+             ex05.RenderSecondPass(view, projection);
+             ex05.RenderThirdPass();
         }
 
     }

@@ -95,6 +95,9 @@ namespace Apg_ex.Excercises.Ex05
             // TODO
             // render objects
             // - render textures only, this will be used for edge detection
+            texShader.Use();
+            ((TextureShader)texShader).SetUniforms(view, projection);
+            dillo.Draw(texShader);
          
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
@@ -113,6 +116,14 @@ namespace Apg_ex.Excercises.Ex05
             // TODO
             // render objects
             // - render lights, this image will then be displayed
+            shader.Use();
+            ((LightShader)shader).SetUniforms(view, projection, new Vector3(1, 1, 1), light.Translation, new Vector3(camPos));
+            dillo.Draw(shader);
+
+            flatShader.Use();
+            ((FlatShader)flatShader).SetUniforms(view, projection, new Vector3(1, 1, 0));
+            light.Draw(flatShader);
+
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
         }
@@ -127,16 +138,22 @@ namespace Apg_ex.Excercises.Ex05
             // OPTION ONE
             // render plane (in normalized coordinates) 
             // set its textures to use the correct textures from pass one and two
-            fbShader.Use();
-            fbShader.SetUniforms(Matrix4.Identity, Matrix4.Identity);
-            ((FrameBufferShader)fbShader).SetTextures(firstPass.depthBuffer, secondPass.colorBuffer);
-            plane.Draw(fbShader);
+            //fbShader.Use();
+            //fbShader.SetUniforms(Matrix4.Identity, Matrix4.Identity);
+            //((FrameBufferShader)fbShader).SetTextures(firstPass.colorBuffer, secondPass.colorBuffer);
+            //plane.Draw(fbShader);
 
             // OPTION TWO: COMPARISON
             // scale the plane down
             // draw it 4 times
             // each time with different translation and with use of different textures
+            fbShader.Use();
+            fbShader.SetUniforms(Matrix4.CreateScale(0.25f) * Matrix4.CreateTranslation(-1f, -1f, 0f), Matrix4.Identity);
+            ((FrameBufferShader)fbShader).SetTextures(firstPass.colorBuffer, secondPass.colorBuffer);
+
             
+
+            plane.Draw(fbShader);
         }
     }
 }

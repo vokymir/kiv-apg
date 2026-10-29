@@ -46,12 +46,13 @@ void main() {
   // condition)
   //          step(x, edge) => 0.0 if x<edge, 1.0 if x>edge
   //          mix(x,y,a) => x(1-a) + ya
-  float edgeVal = abs(dot(norm, viewDir));
-  float isEdge = step(edgeVal, 0.5);
-  vec3 outlineCol = vec3(0.0, 1.0, 0.0);
+  // float edgeVal = abs(dot(norm, viewDir));
+  // float isEdge = step(edgeVal, 0.5);
+  // vec3 outlineCol = vec3(0.0, 1.0, 0.0);
 
   vec3 lightResult = (ambCol + diffCol + specCol + rimCol) * tex1.xyz;
 
-  vec3 res = mix(lightResult, outlineCol, isEdge);
-  FragColor = vec4(res, 1.0);
+  // vec3 res = mix(lightResult, outlineCol, isEdge);
+  // FragColor = vec4(res, 1.0);
+  FragColor = vec4(lightResult, 1.0);
 }
