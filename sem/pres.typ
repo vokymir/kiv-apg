@@ -42,42 +42,32 @@
 
 == Animace
 
-
-= Dekomprese
-
-== Možnosti
-
-== Pravidla
-
-== Animace
-
-
 // 1-based helpers (the figure numbers vertices 1..21)
 #let tri1(a, b, c, ..args) = tri(a - 1, b - 1, c - 1, ..args)
 
 #let mesh = make-mesh(
 vertices: (
-  v(-40pt, -140pt),   //  1
-  v(40pt, -140pt),    //  2
+  v(-40pt, -140pt, label-offset: (0pt, -2pt)),   //  1
+  v(40pt, -140pt, label-offset: (2pt, -2pt)),    //  2
   v(80pt, -70pt),    //  3
-  v(80pt, 0pt),       //  4   y = 0
-  v(160pt, 0pt),      //  5   y = 0
-  v(220pt, 0pt),      //  6   y = 0
-  v(160pt, 70pt),     //  7
-  v(120pt, 140pt),    //  8
-  v(40pt, 140pt),     //  9
-  v(0pt, 70pt),       // 10   x = 0
-  v(0pt, 0pt),        // 11   x = 0, y = 0
-  v(-70pt, 60pt),     // 12
-  v(-160pt, 65pt),    // 13
-  v(-200pt, 0pt),     // 14   y = 0
-  v(-220pt, -80pt),   // 15
+  v(80pt, 0pt, label-offset: (5pt, -15pt)), //  4   
+  v(160pt, 0pt, label-offset: (0pt, -5pt)),      //  5   
+  v(220pt, 0pt),      //  6  
+  v(160pt, 70pt, label-offset: (5pt, 3pt)),     //  7
+  v(120pt, 140pt, label-offset: (2pt, 2pt)),    //  8
+  v(40pt, 140pt, label-offset: (-2pt, 2pt)),     //  9
+  v(0pt, 70pt, label-offset: (-5pt, 0pt)),       // 10 
+  v(0pt, 0pt, label-offset: (5pt,5pt)),        // 11
+  v(-70pt, 60pt, label-offset: (0pt, 5pt)),     // 12
+  v(-160pt, 65pt, label-offset: (0pt, 5pt)),    // 13
+  v(-200pt, 0pt, label-offset: (-5pt, 0pt)),     // 14
+  v(-220pt, -80pt, label-offset: (-5pt, 5pt)),   // 15
   v(-120pt, -140pt),  // 16
-  v(-80pt, -70pt),    // 17
-  v(0pt, -70pt),      // 18   x = 0
-  v(80pt, 70pt),      // 19
-  v(-100pt, 0pt),     // 20   y = 0
-  v(-150pt, -70pt),   // 21
+  v(-80pt, -70pt, label-offset: (-8pt, 4pt)),    // 17
+  v(0pt, -70pt, label-offset: (-4pt, 4pt)),      // 18
+  v(80pt, 70pt, label-offset: (-5pt, -4pt)),      // 19
+  v(-100pt, 0pt, label-offset: (9pt, -4pt)),     // 20
+  v(-150pt, -70pt, label-offset: (-13pt, 13pt)),   // 21
 ),
   // listed in processing order: triangle k is removed by symbol k+1
   triangles: (
@@ -146,11 +136,34 @@ vertices: (
   mesh,
   history.map(((g, sym)) => (g.map(k => k - 1), sym)),   
 )  
+//
+// coloured chip: text on a filled background
+#let eb-tag(clr, body, fg: black) = box(
+  fill: clr, inset: (x: 3pt), outset: (y: 3pt), radius: 2pt,
+  text(fill: fg, weight: "bold", body),
+)
 
-== Edgebreaker
+// CLERS symbol in its colour
+#let eb-sym(s, st: eb-style) = eb-tag(st.clers.at(upper(s)), upper(s))
 
+// gates
+#let eb-gate(st: eb-style) = eb-tag(st.gate, [_gate_])
+#let eb-prev-gate(st: eb-style) = eb-tag(st.prev-gate, [_gate_], fg: white)
 
 #figure(
   alternatives(..states.map(m => draw(m, size: (80%, 80%), label-base: 1))),
-  caption: [animace]
+  caption: [Komprimační algoritmus. Operace
+    #eb-sym("C") #eb-sym("L") #eb-sym("E") #eb-sym("R") #eb-sym("S")
+    vyznačeny barevně, aktuální #eb-gate() a bývalé #eb-prev-gate().],
 )
+
+
+= Dekomprese
+
+== Možnosti
+
+== Pravidla
+
+== Animace
+
+

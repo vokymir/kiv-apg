@@ -33,14 +33,14 @@
   label-gap: 5pt,
   label-size: 18pt,
   label-base: 0,
-  tri-labels: true, // triangle indices at the centroid
+  tri-labels: "done", // true = always, false = never, "done" = only after its CLERS step
   tri-label-size: 28pt,
   tri-label-clr: gray.darken(80%),
 ) = {
   let vs = mesh.vertices.map(as-v)
   let sy = if y-up { -1 } else { 1 }
 
-  block(width: size.at(0), height: size.at(1), stroke: 0.5pt + gray, layout(sz => {
+  block(width: size.at(0), height: size.at(1), stroke: 0.0pt + gray, layout(sz => {
     let (cx, cy) = (sz.width / 2, sz.height / 2)
     let pt = k => (cx + vs.at(k).x, cy + sy * vs.at(k).y)
 
@@ -89,10 +89,11 @@
     }
 
     // 2) triangle numbers (centroid)
-    if tri-labels {
+    if tri-labels != false {
       for (n, t) in mesh.triangles.enumerate() {
         let l = t.at("label", default: auto)
-        if l != none {
+        let visible = tri-labels == true or t.at("done", default: false)
+        if visible and l != none {
           let ps = t.i.map(pt)
           let gx = ps.map(p => p.at(0)).sum() / 3
           let gy = ps.map(p => p.at(1)).sum() / 3
@@ -148,11 +149,11 @@
     S: rgb("#5fe05f"),
     E: rgb("#f04040"),
   ),
-  gate: green.darken(10%),
-  gate-thickness: 3pt, // current gate
+  gate: rgb(0, 255, 255),
+  gate-thickness: 8pt, // current gate
   prev-gate: rgb("#8b5a2b"),
   prev-thickness: 3pt, // earlier gates
-  vertex: green.darken(10%),
+  vertex: rgb("#00ffff"),
   vertex-radius: 3.5pt, // highlighted opposite vertex
 )
 
@@ -169,7 +170,7 @@
 
   for v in range(m.vertices.len()) {
     let o = m.vertices.at(v)
-    m.vertices.at(v) = (..as-v(o), clr: black, radius: st.vertex-radius)
+    m.vertices.at(v) = (..as-v(o), clr: black, radius: old-vertex.radius)
   }
 
   // state A: gate + vertex highlight, previous gates -> brown
@@ -191,17 +192,26 @@
   (a, b)
 }
 
-// run a whole history: ((gate, symbol), ...) -> all states, incl. the initial one
-#let eb-run(m, steps, st: eb-style) = {
-  let out = (m,)
-  for (gate, sym) in steps {
-    out += eb-step(out.last(), gate, sym, st: st)
-  }
-  out
-}
 
 #let eb-clear(m) = {
   let m = m
   m.edges = m.edges.filter(e => e.at("role", default: none) != "gate")
+
+  let first = m.vertices.at(0)
+  for v in range(m.vertices.len()) {
+    let o = m.vertices.at(v)
+    m.vertices.at(v) = (..as-v(o), clr: black, radius: first.radius)
+  }
+
   m
+}
+
+// run a whole history: ((gate, symbol), ...) -> all states, incl. the initial one
+#let eb-run(m, steps, st: eb-style, finish: true) = {
+  let out = (m,)
+  for (gate, sym) in steps {
+    out += eb-step(out.last(), gate, sym, st: st)
+  }
+  if finish { out.push(eb-clear(out.last())) }
+  out
 }
