@@ -32,13 +32,43 @@
 
 = Motivace
 
-== .obj
+== Dělení
 
-== Paměťová náročnost
+#pause
+=== Geometrie
+
+$ forall v in V: $
+
+#pause
+
+#alternatives[
+  $ v = (x, y, z) $
+][
+  $ v = (x, y, z, #text(red)[$n, "uv", dots$]) $
+]
+
+#pause
+=== Konektivita
+
+#let eqs = (
+  $ forall e in E: e = (e_i, e_j) $,
+  $ forall t in T: t = (v_i, v_j, v_k) $,
+  $ forall c in 3T: c = (c_("op")) $,
+)
+
+#pause
+
+#alternatives(
+  ..range(1, eqs.len() + 1).map(n => eqs.slice(0, n).join()),
+  $ V : 2F : 3E $,
+)
+
 
 = Komprese
 
 == Pravidla
+
+...CLERS TODO
 
 == Animace
 
@@ -157,13 +187,24 @@ vertices: (
     vyznačeny barevně, aktuální #eb-gate() a bývalé #eb-prev-gate().],
 )
 
+== Vyšší genus?
+
+TODO: jde, jak na to - už bez animace???? anebo animovat díru a "zipování"
 
 = Dekomprese
 
 == Možnosti
 
+TODO: basic, spirale-reversi, wrap&zip
+
 == Pravidla
 
+TODO: wrap&zip
+
+TODO: včetně genusu! ale ten nebude animován
+
 == Animace
+
+TODO: animace wrap&zip
 
 
