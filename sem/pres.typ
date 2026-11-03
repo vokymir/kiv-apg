@@ -1,4 +1,4 @@
-#import "@preview/touying:0.7.4": *
+#import "@preview/touying:0.8.0": *
 #import themes.university: *
 
 #import "@preview/numbly:0.1.0": numbly
@@ -17,18 +17,18 @@
     // logo: image("./fav_logo/FAV_cmyk.pdf"),
   ),
   config-colors(
-    primary: rgb(201 , 151 , 0),
-    secondary: rgb(187 , 189, 199),
+    primary: rgb(201, 151, 0),
+    secondary: rgb(187, 189, 199),
     tertiary: rgb("#000"),
     neutral-lightest: rgb("#ffffff"),
     neutral-darkest: rgb("#000000"),
-  )
+  ),
 )
 
 
 #set heading(numbering: numbly("{1}.", default: "1.1"))
 
-#title-slide(logo: image("./fav_logo/FAV_cmyk.pdf",width:20%))
+#title-slide(logo: image("./fav_logo/FAV_cmyk.pdf", width: 20%))
 
 = Motivace
 
@@ -68,143 +68,93 @@ $ forall v in V: $
 
 == Pravidla
 
-...CLERS TODO
+// ...CLERS TODO
+
+
+// navíc manifold & orientovaný
+
+// díry a handly zvládneme
+
 
 == Animace
 
-// 1-based helpers (the figure numbers vertices 1..21)
-#let tri1(a, b, c, ..args) = tri(a - 1, b - 1, c - 1, ..args)
-
-#let mesh = make-mesh(
-vertices: (
-  v(-40pt, -140pt, label-offset: (0pt, -2pt)),   //  1
-  v(40pt, -140pt, label-offset: (2pt, -2pt)),    //  2
-  v(80pt, -70pt),    //  3
-  v(80pt, 0pt, label-offset: (5pt, -15pt)), //  4   
-  v(160pt, 0pt, label-offset: (0pt, -5pt)),      //  5   
-  v(220pt, 0pt),      //  6  
-  v(160pt, 70pt, label-offset: (5pt, 3pt)),     //  7
-  v(120pt, 140pt, label-offset: (2pt, 2pt)),    //  8
-  v(40pt, 140pt, label-offset: (-2pt, 2pt)),     //  9
-  v(0pt, 70pt, label-offset: (-5pt, 0pt)),       // 10 
-  v(0pt, 0pt, label-offset: (5pt,5pt)),        // 11
-  v(-70pt, 60pt, label-offset: (0pt, 5pt)),     // 12
-  v(-160pt, 65pt, label-offset: (0pt, 5pt)),    // 13
-  v(-200pt, 0pt, label-offset: (-5pt, 0pt)),     // 14
-  v(-220pt, -80pt, label-offset: (-5pt, 5pt)),   // 15
-  v(-120pt, -140pt),  // 16
-  v(-80pt, -70pt, label-offset: (-8pt, 4pt)),    // 17
-  v(0pt, -70pt, label-offset: (-4pt, 4pt)),      // 18
-  v(80pt, 70pt, label-offset: (-5pt, -4pt)),      // 19
-  v(-100pt, 0pt, label-offset: (9pt, -4pt)),     // 20
-  v(-150pt, -70pt, label-offset: (-13pt, 13pt)),   // 21
-),
-  // listed in processing order: triangle k is removed by symbol k+1
-  triangles: (
-    tri1(16, 1, 17),    //  1 C
-    tri1(17, 1, 18),    //  2 C
-    tri1(18, 1, 2),     //  3 R
-    tri1(18, 2, 3),     //  4 R
-    tri1(18, 3, 4),     //  5 R
-    tri1(18, 4, 11),    //  6 S  (pushes gate 18-11)
-    tri1(10, 11, 4),    //  7 L
-    tri1(10, 4, 19),    //  8 C
-    tri1(19, 4, 5),     //  9 R
-    tri1(19, 5, 7),     // 10 S  (pushes gate 19-7)
-    tri1(7, 5, 6),      // 11 E
-    tri1(19, 7, 8),     // 12 R  (pop 19-7)
-    tri1(19, 8, 9),     // 13 R
-    tri1(19, 9, 10),    // 14 E
-    tri1(17, 18, 11),   // 15 L  (pop 18-11)
-    tri1(17, 11, 20),   // 16 C
-    tri1(20, 11, 12),   // 17 R
-    tri1(20, 12, 13),   // 18 R
-    tri1(20, 13, 14),   // 19 R
-    tri1(20, 14, 21),   // 20 C
-    tri1(21, 14, 15),   // 21 R
-    tri1(21, 15, 16),   // 22 R
-    tri1(21, 16, 17),   // 23 R
-    tri1(21, 17, 20),   // 24 E
-  ),
-  edges: (),
-)
-
-// (gate, symbol), vertex numbers as in the figure (1-based)
-#let history = (
- ((16, 1), "C"),
- ((17, 1), "C"),
- ((18, 1), "R"),
- ((18, 2), "R"),
-
- ((18, 3), "R"),
- ((18, 4), "S"),
- ((11, 4), "L"),
- ((10, 4), "C"),
-
- ((19, 4), "R"),
- ((19, 5), "S"),
- ((7, 5),  "E"),
- ((19, 7), "R"),
-
- ((19, 8), "R"),
- ((19, 9), "E"),
- ((18, 11), "L"),
- ((17, 11), "C"),
-
- ((20, 11), "R"),
- ((20, 12), "R"),
- ((20, 13), "R"),
- ((20, 14), "C"),
-
- ((21, 14), "R"),
- ((21, 15), "R"),
- ((21, 16), "R"),
- ((21, 17), "E"),
-)
-
-#let states = eb-run(
-  mesh,
-  history.map(((g, sym)) => (g.map(k => k - 1), sym)),   
-)  
-//
-// coloured chip: text on a filled background
-#let eb-tag(clr, body, fg: black) = box(
-  fill: clr, inset: (x: 3pt), outset: (y: 3pt), radius: 2pt,
-  text(fill: fg, weight: "bold", body),
-)
-
-// CLERS symbol in its colour
-#let eb-sym(s, st: eb-style) = eb-tag(st.clers.at(upper(s)), upper(s))
-
-// gates
-#let eb-gate(st: eb-style) = eb-tag(st.gate, [_gate_])
-#let eb-prev-gate(st: eb-style) = eb-tag(st.prev-gate, [_gate_], fg: white)
+#import "anim1.typ"
 
 #figure(
-  alternatives(..states.map(m => draw(m, size: (80%, 80%), label-base: 1))),
-  caption: [Komprimační algoritmus. Operace
-    #eb-sym("C") #eb-sym("L") #eb-sym("E") #eb-sym("R") #eb-sym("S")
-    vyznačeny barevně, aktuální #eb-gate() a bývalé #eb-prev-gate().],
+  alternatives(..anim1.comp.map(draw.with(size: (80%, 80%)))),
+  caption: [Jednoduchá komprese.],
 )
 
 == Vyšší genus?
 
-TODO: jde, jak na to - už bez animace???? anebo animovat díru a "zipování"
+#import "anim2.typ"
+
+#figure(
+  alternatives(..anim2.comp.map(draw.with(size: (80%, 80%)))),
+  caption: [Komprese díry.],
+)
+
 
 = Dekomprese
 
 == Možnosti
 
-TODO: basic, spirale-reversi, wrap&zip
+//TODO: basic, spirale-reversi, wrap&zip
+
 
 == Pravidla
 
-TODO: wrap&zip
+// TODO: wrap&zip
 
-TODO: včetně genusu! ale ten nebude animován
+// TODO: včetně genusu! ale ten nebude animován
 
 == Animace
 
-TODO: animace wrap&zip
+// TODO: animace wrap&zip
 
+#import "anim3.typ"
 
+#figure(
+  alternatives(..anim3.decomp.map(draw.with(size: (80%, 80%)))),
+  caption: [Dekomprese.],
+)
+
+= Zdroje
+
+#let figure-outline() = context {
+  let seen = ()
+  let items = ()
+  for f in query(figure) {
+    if f.caption == none { continue }
+    let id = repr(f.caption.body)          // same caption = same figure
+    if id not in seen {
+      seen.push(id)
+      items.push(f)                        // first occurrence = first subslide
+    }
+  }
+  for (i, f) in items.enumerate() {
+    let loc = f.location()
+    link(loc)[
+      Obrázek #(i + 1): #f.caption.body
+      #box(width: 1fr, repeat[.])
+      // touying shows THE slide
+      #utils.slide-counter.at(loc).first()
+    ]
+    linebreak()
+  }
+}
+
+== Obrázky
+
+#figure-outline()
+
+== Reference
+#set text(size: 0.6em)
+
+Originální paper @rossignac1999edgebreaker
+Corner table @rossignac2003corner
+Významné vylepšení @lewiner2004efficient
+Wrap & Zip @rossignac1999wrapzipreport
+Inspirace animací @eb-slides
+
+#bibliography("refs.bib", title: none, style: "ieee")

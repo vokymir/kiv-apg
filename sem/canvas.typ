@@ -1,80 +1,179 @@
-// ---------- constructors with defaults ----------
-#let v(x, y, clr: black, radius: 1.5pt, label: auto, label-angle: auto, label-offset: (0pt, 0pt)) = (
-  x: x,
-  y: y,
-  clr: clr,
-  radius: radius,
-  label: label,
-  label-angle: label-angle,
-  label-offset: label-offset,
+// ================= helpers =================
+#let L = x => if type(x) == length { x } else { x * 1pt }       // 5 -> 5pt
+#let key(..ids) = ids.pos().map(str).sorted().join("-")        // unordered key
+
+#let palette = (
+  C: yellow, L: rgb("#d9a066"), R: rgb("#6fa8f0"),
+  S: rgb("#5fe05f"), E: rgb("#f04040"), M: rgb("#c58af9"),
 )
+#let gate-clr = rgb(255, 0, 255)
+#let gate-w = 8pt
 
-#let tri(a, b, c, clr: white, stroke: black) = (i: (a, b, c), clr: clr, stroke: stroke)
-
-// edges are *highlights* drawn over the triangle outlines
-#let edge(a, b, clr: green, thickness: 2.5pt) = (i: (a, b), clr: clr, thickness: thickness)
-
-#let make-mesh(vertices: (), triangles: (), edges: ()) = (vertices: vertices, triangles: triangles, edges: edges)
-
-// ---------- normalisation (accepts arrays and partial dicts) ----------
-#let as-v(p) = if type(p) == array {
-  v(p.at(0), p.at(1))
-} else {
-  (clr: black, radius: 1.5pt, ..p)
+// ================= setup ops =================
+#let def-border(..o) = s => { s.border = (:..s.border, ..o.named()); s }
+#let def-stack(..o) = s => {
+  s.stack-def = (pos: (0, 0), n: 4, w: 70, h: 30, title: [Stack], ..o.named())
+  s
+}
+#let def-hist(..o) = s => {
+  s.hist-def = (pos: (0, 0), size: 20pt, prefix: [History = ], ..o.named())
+  s
 }
 
-// ---------- drawing ----------
+// ================= geometry ops =================
+#let V(x, y, ..o) = s => {                 // vertex; number = order of creation
+  s.n += 1
+  s.v.insert(str(s.n), (
+    id: s.n, x: L(x), y: L(y), vis: true, clr: black, r: 3pt,
+    label: auto, angle: auto, off: (0, 0), ..o.named(),
+  ))
+  s
+}
+#let T(a, b, c, ..o) = s => {
+  s.t.insert(key(a, b, c), (i: (a, b, c), clr: white, stroke: 0.7pt + gray.darken(30%), ..o.named()))
+  s
+}
+#let E(a, b, ..o) = s => {
+  s.e.insert(key(a, b), (i: (a, b), clr: green, w: 2.5pt, dash: none, ..o.named()))
+  s
+}
+#let set-v(i, ..o) = s => { s.v.at(str(i)) = (:..s.v.at(str(i)), ..o.named()); s }
+#let set-t(a, b, c, ..o) = s => {
+  let k = key(a, b, c)
+  s.t.at(k) = (:..s.t.at(k), ..o.named())
+  s
+}
+#let set-e(a, b, ..o) = s => {
+  let k = key(a, b)
+  s.e.at(k) = (..s.e.at(k), ..o.named())
+  s
+}
+#let del-v(i) = s => { let _ = s.v.remove(str(i)); s }
+#let del-t(a, b, c) = s => { let _ = s.t.remove(key(a, b, c)); s }
+#let del-e(a, b) = s => { let _ = s.e.remove(key(a, b)); s }
+
+#let show-v(i, ..o) = set-v(i, vis: true, ..o.named())
+#let hide-v(i) = set-v(i, vis: false)
+
+// ================= gate / CLERS =================
+#let gate(a, b, ..o) = s => {
+  s.e.insert("gate", (i: (a, b), clr: gate-clr, w: gate-w, dash: none, ..o.named()))
+  s
+}
+#let no-gate = s => {
+  if "gate" in s.e { let _ = s.e.remove("gate") }
+  s
+}
+#let clers(a, b, c, sym, ..o) = set-t(a, b, c, clr: palette.at(sym), label: sym, ..o.named())
+
+// ================= stack =================
+#let push(a, b, ..o) = s => {              // cell "a-b" + dashed highlighted edge
+  s.stack.push((a, b))
+  s.e.insert(key(a, b), (i: (a, b), clr: gate-clr, w: gate-w, dash: "dotted", ..o.named()))
+  s
+}
+#let pop() = s => {
+  assert(s.stack.len() > 0, message: "pop() on empty stack")
+  let (a, b) = s.stack.last()
+  s.stack = s.stack.slice(0, -1)
+  if key(a, b) in s.e { let _ = s.e.remove(key(a, b)) }
+  s
+}
+
+// ================= history =================
+#let add-h(sym, hl: true) = s => {
+  s.h.push(sym)
+  if hl { s.hh = s.h.len() - 1 }
+  s
+}
+#let remove-h() = s => {
+  s.h = s.h.slice(0, -1)
+  if s.hh != none and s.hh >= s.h.len() { s.hh = none }
+  s
+}
+#let highlight-h(..a) = s => {
+  let i = if a.pos().len() == 0 { -1 } else { a.pos().first() }
+  s.hh = if i == none { none } else if i < 0 { s.h.len() + i } else { i }
+  s
+}
+#let set-h(str-hist) = s => { s.h = str-hist.clusters(); s.hh = none; s }
+
+// ================= script -> states =================
+#let next = "next"                          // = #pause
+
+#let anim(..items) = {
+  let states = ()
+  let s = (
+    v: (:), t: (:), e: (:), n: 0,
+    h: (), hh: none, stack: (),
+    stack-def: none, hist-def: none,
+    border: (clr: black, w: 2.5pt),
+  )
+  let dirty = false
+  for it in items.pos().flatten() {
+    if it == "next" {
+      if dirty { states.push(s); dirty = false }
+    } else {
+      s = it(s)
+      dirty = true
+    }
+  }
+  if dirty { states.push(s) }
+  // positions + triangles over ALL states -> stable label placement
+  let vpos = (:)
+  let all = ()
+  for st in states {
+    for (k, p) in st.v { vpos.insert(k, (p.x, p.y)) }
+    all += st.t.values().map(t => t.i)
+  }
+  states.map(st => (..st, vpos: vpos, all: all))
+}
+
+// ================= drawing =================
 #let draw(
-  mesh,
+  s,
   size: (100%, 60%),
   y-up: true,
   axes: false,
-  labels: true, // vertex indices
+  labels: true,
   label-gap: 5pt,
   label-size: 18pt,
-  label-base: 0,
-  tri-labels: "done", // true = always, false = never, "done" = only after its CLERS step
-  tri-label-size: 28pt,
+  cell-size: 16pt,
+  tri-label-size: 26pt,
   tri-label-clr: gray.darken(80%),
 ) = {
-  let vs = mesh.vertices.map(as-v)
-  let sy = if y-up { -1 } else { 1 }
-
-  block(width: size.at(0), height: size.at(1), stroke: 0.0pt + gray, layout(sz => {
+  let sg = if y-up { -1 } else { 1 }
+  block(width: size.at(0), height: size.at(1), layout(sz => {
     let (cx, cy) = (sz.width / 2, sz.height / 2)
-    let pt = k => (cx + vs.at(k).x, cy + sy * vs.at(k).y)
-
-    // body centred on canvas point (x, y)
+    let xy = (x, y) => (cx + x, cy + sg * y)
+    let pt = k => { let p = s.v.at(str(k)); xy(p.x, p.y) }
+    let gp = k => { let p = s.vpos.at(str(k)); xy(p.at(0), p.at(1)) }
     let at-center = (x, y, body) => context {
       let m = measure(body)
       place(top + left, dx: x - m.width / 2, dy: y - m.height / 2, body)
     }
-
-    // widest free angular gap around vertex k (canvas coordinates, radians)
+    // widest free angular gap around vertex k (uses every triangle of the script)
     let best-angle = k => {
-      let (x0, y0) = pt(k)
+      let (x0, y0) = gp(k)
       let angs = ()
-      for tr in mesh.triangles {
-        if k in tr.i {
-          for j in tr.i.filter(j => j != k) {
-            let (x1, y1) = pt(j)
+      for tr in s.all {
+        if k in tr {
+          for j in tr.filter(j => j != k) {
+            let (x1, y1) = gp(j)
             angs.push(calc.atan2((x1 - x0) / 1pt, (y1 - y0) / 1pt).rad())
           }
         }
       }
-      if angs.len() == 0 {
-        -calc.pi / 4
-      } else {
-        let angs = angs.sorted()
-        let n = angs.len()
-        let best = (gap: -1.0, ang: 0.0)
-        for i in range(n) {
-          let a = angs.at(i)
-          let gap = if i < n - 1 { angs.at(i + 1) - a } else { angs.at(0) - a + 2 * calc.pi }
-          if gap > best.gap { best = (gap: gap, ang: a + gap / 2) }
-        }
-        best.ang
+      if angs.len() == 0 { return -calc.pi / 4 }
+      angs = angs.sorted()
+      let n = angs.len()
+      let best = (gap: -1.0, ang: 0.0)
+      for i in range(n) {
+        let a = angs.at(i)
+        let gap = if i < n - 1 { angs.at(i + 1) - a } else { angs.at(0) - a + 2 * calc.pi }
+        if gap > best.gap { best = (gap: gap, ang: a + gap / 2) }
       }
+      best.ang
     }
 
     if axes {
@@ -83,135 +182,102 @@
     }
 
     // 1) triangles
-    for t in mesh.triangles {
-      let t = (clr: white, stroke: black, ..t)
+    for t in s.t.values() {
       place(top + left, polygon(fill: t.clr, stroke: t.stroke, ..t.i.map(pt)))
     }
-
-    // 2) triangle numbers (centroid)
-    if tri-labels != false {
-      for (n, t) in mesh.triangles.enumerate() {
-        let l = t.at("label", default: auto)
-        let visible = tri-labels == true or t.at("done", default: false)
-        if visible and l != none {
-          let ps = t.i.map(pt)
-          let gx = ps.map(p => p.at(0)).sum() / 3
-          let gy = ps.map(p => p.at(1)).sum() / 3
-          at-center(gx, gy, text(size: tri-label-size, fill: tri-label-clr, if l == auto { [#n] } else { l }))
+    // 2) triangle labels (CLERS letters)
+    for t in s.t.values() {
+      let l = t.at("label", default: none)
+      if l != none {
+        let ps = t.i.map(pt)
+        let gx = ps.map(p => p.at(0)).sum() / 3
+        let gy = ps.map(p => p.at(1)).sum() / 3
+        at-center(gx, gy, text(size: tri-label-size, weight: "bold", fill: tri-label-clr, [#l]))
+      }
+    }
+    // 3) border = edges with exactly one (non-hole) triangle
+    let cnt = (:)
+    for t in s.t.values() {
+      if not t.at("hole", default: false) {
+        let (a, b, c) = t.i
+        for p in ((a, b), (b, c), (c, a)) {
+          let k = key(..p)
+          cnt.insert(k, (p: p, n: cnt.at(k, default: (n: 0)).n + 1))
         }
       }
     }
-
-    // 3) highlighted edges
-    for e in mesh.at("edges", default: ()) {
-      let e = (clr: green, thickness: 2.5pt, ..e)
-      let (a, b) = e.i.map(pt)
-      place(top + left, line(
-        start: a,
-        end: b,
-        stroke: stroke(paint: e.clr, thickness: e.thickness, cap: "round"),
-      ))
+    for e in cnt.values().filter(e => e.n == 1) {
+      let (p, q) = e.p.map(pt)
+      place(top + left, line(start: p, end: q,
+        stroke: stroke(paint: s.border.clr, thickness: s.border.w, cap: "round")))
     }
-
-    // 4) vertices
-    for (k, p) in vs.enumerate() {
-      let (x, y) = pt(k)
-      place(top + left, dx: x - p.radius, dy: y - p.radius, circle(radius: p.radius, fill: p.clr, stroke: none))
+    // 4) highlighted edges (gate, stack gates, ...)
+    for e in s.e.values() {
+      let (p, q) = e.i.map(pt)
+      let dash = e.at("dash", default: none)
+      place(top + left, line(start: p, end: q, stroke: stroke(
+        paint: e.clr, thickness: e.w, cap: if dash == none { "round" } else { "butt" }, dash: dash)))
     }
-
-    // 5) vertex labels
+    // 5) visible vertices + labels
+    for p in s.v.values() {
+      if p.vis {
+        let (x, y) = pt(p.id)
+        place(top + left, dx: x - p.r, dy: y - p.r, circle(radius: p.r, fill: p.clr, stroke: none))
+      }
+    }
     if labels {
-      for (k, p) in vs.enumerate() {
-        let l = p.at("label", default: auto)
-        if l != none {
-          let (x, y) = pt(k)
-          let ang = p.at("label-angle", default: auto)
-          let th = if ang == auto { best-angle(k) } else { sy * ang.rad() }
-          let (ox, oy) = p.at("label-offset", default: (0pt, 0pt))
-          let d = p.radius + label-gap
+      for p in s.v.values() {
+        if p.vis and p.label != none {
+          let (x, y) = pt(p.id)
+          let th = if p.angle == auto { best-angle(p.id) } else { sg * p.angle.rad() }
+          let (ox, oy) = p.off.map(L)
+          let d = p.r + label-gap
           at-center(
             x + d * calc.cos(th) + ox,
-            y + d * calc.sin(th) + sy * oy,
-            text(size: label-size, if l == auto { [#(k + label-base)] } else { l }),
+            y + d * calc.sin(th) + sg * oy,
+            text(size: label-size, if p.label == auto { [#p.id] } else { p.label }),
           )
         }
       }
     }
+    // 6) stack: n cells, bottom -> top, `pos` = centre of the column
+    if s.stack-def != none {
+      let d = s.stack-def
+      let (w, h) = (L(d.w), L(d.h))
+      let (px, py) = d.pos.map(L)
+      let n = calc.max(d.n, s.stack.len())
+      for j in range(n) {
+        let (x, y) = xy(px, py + (j - n / 2 + 0.5) * h)
+        let filled = j < s.stack.len()
+        let head = j == s.stack.len() - 1
+        place(top + left, dx: x - w / 2, dy: y - h / 2, rect(
+          width: w, height: h, inset: 0pt, stroke: 1pt + black,
+          fill: if head { gate-clr.lighten(60%) } else { none },
+          align(center + horizon, if filled {
+            text(size: cell-size, str(s.stack.at(j).at(0)) + "-" + str(s.stack.at(j).at(1)))
+          } else { [] }),
+        ))
+      }
+      let (tx, ty) = xy(px, py + n / 2 * h + 14pt)
+      at-center(tx, ty, text(size: cell-size, d.title))
+    }
+    // 7) history string; `pos` = top-left corner
+    if s.hist-def != none {
+      let d = s.hist-def
+      let (hx, hy) = d.pos.map(L)
+      let (x, y) = xy(hx, hy)
+      let syms = s.h.enumerate().map(((i, c)) => if i == s.hh {
+        box(fill: palette.at(c, default: yellow), inset: (x: 2pt), outset: (y: 3pt), radius: 2pt, c)
+      } else { c })
+      place(top + left, dx: x, dy: y, text(size: d.size, { d.prefix; syms.join() }))
+    }
   }))
 }
-// ===================== EDGEBREAKER VOE ========================
 
-#let eb-style = (
-  clers: (
-    C: yellow,
-    L: rgb("#d9a066"),
-    R: rgb("#6fa8f0"),
-    S: rgb("#5fe05f"),
-    E: rgb("#f04040"),
-  ),
-  gate: rgb(0, 255, 255),
-  gate-thickness: 8pt, // current gate
-  prev-gate: rgb("#8b5a2b"),
-  prev-thickness: 3pt, // earlier gates
-  vertex: rgb("#00ffff"),
-  vertex-radius: 3.5pt, // highlighted opposite vertex
+// ================= caption chips =================
+#let eb-tag(clr, body, fg: black) = box(
+  fill: clr, inset: (x: 3pt), outset: (y: 3pt), radius: 2pt,
+  text(fill: fg, weight: "bold", body),
 )
-
-#let eb-step(m, gate, sym, st: eb-style, tri-idx: auto) = {
-  // 1) which triangle?
-  let t = if tri-idx != auto { tri-idx } else {
-    let c = m.triangles.enumerate().filter(((k, tr)) => gate.all(g => g in tr.i) and not tr.at("done", default: false))
-    assert(c.len() > 0, message: "no unprocessed triangle on gate " + repr(gate))
-    c.first().at(0)
-  }
-  // 2) opposite vertex = the one not on the gate
-  let opp = m.triangles.at(t).i.find(k => k not in gate)
-  let old-vertex = m.vertices.at(opp)
-
-  for v in range(m.vertices.len()) {
-    let o = m.vertices.at(v)
-    m.vertices.at(v) = (..as-v(o), clr: black, radius: old-vertex.radius)
-  }
-
-  // state A: gate + vertex highlight, previous gates -> brown
-  let a = m
-  a.edges = a.edges.map(e => if e.at("role", default: none) == "gate" {
-    (..e, clr: st.prev-gate, thickness: st.prev-thickness)
-  } else { e })
-  a.edges.push((
-    ..edge(gate.at(0), gate.at(1), clr: st.gate, thickness: st.gate-thickness),
-    role: "gate",
-  ))
-  a.vertices.at(opp) = (..as-v(old-vertex), clr: st.vertex, radius: st.vertex-radius)
-
-  // state B: triangle gets its CLERS colour, vertex returns to normal
-  let b = a
-  b.triangles.at(t) = (..b.triangles.at(t), clr: st.clers.at(upper(sym)), done: true)
-  // b.vertices.at(opp) = old-vertex
-
-  (a, b)
-}
-
-
-#let eb-clear(m) = {
-  let m = m
-  m.edges = m.edges.filter(e => e.at("role", default: none) != "gate")
-
-  let first = m.vertices.at(0)
-  for v in range(m.vertices.len()) {
-    let o = m.vertices.at(v)
-    m.vertices.at(v) = (..as-v(o), clr: black, radius: first.radius)
-  }
-
-  m
-}
-
-// run a whole history: ((gate, symbol), ...) -> all states, incl. the initial one
-#let eb-run(m, steps, st: eb-style, finish: true) = {
-  let out = (m,)
-  for (gate, sym) in steps {
-    out += eb-step(out.last(), gate, sym, st: st)
-  }
-  if finish { out.push(eb-clear(out.last())) }
-  out
-}
+#let eb-sym(s) = eb-tag(palette.at(upper(s)), upper(s))
+#let gate-tag() = eb-tag(gate-clr, [_gate_])

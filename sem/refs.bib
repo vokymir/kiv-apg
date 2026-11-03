@@ -1,0 +1,135 @@
+% NOTE:
+% ALL were created from paper names with chatgpt, manualy checked only those
+% referenced (and actually used), remaining ones are here for potential future 
+% use
+
+% ---------- core Edgebreaker papers ----------
+@article{rossignac1999edgebreaker,
+  author  = {Rossignac, Jarek},
+  title   = {Edgebreaker: Connectivity Compression for Triangle Meshes},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  volume  = {5},
+  number  = {1},
+  pages   = {47--61},
+  year    = {1999},
+  month   = {jan},
+  doi     = {10.1109/2945.764870},
+}
+
+@incollection{rossignac2003corner,
+  author    = {Rossignac, Jarek and Safonova, Alla and Szymczak, Andrzej},
+  title     = {Edgebreaker on a Corner Table: A Simple Technique for Representing and Compressing Triangulated Surfaces},
+  booktitle = {Hierarchical and Geometrical Methods in Scientific Visualization},
+  editor    = {Farin, Gerald and Hamann, Bernd and Hagen, Hans},
+  publisher = {Springer},
+  address   = {Berlin, Heidelberg},
+  pages     = {41--50},
+  year      = {2003},                                   % VERIFY (2002/2003)
+  doi       = {10.1007/978-3-662-07443-5_3},            % VERIFY
+}
+
+@inproceedings{lewiner2004efficient,
+  author    = {Lewiner, Thomas and Lopes, Hélio and Rossignac, Jarek and Vieira, Antônio Wilson},
+  title     = {Efficient Edgebreaker for Surfaces of Arbitrary Topology},
+  booktitle = {Proceedings of SIBGRAPI 2004 (XVII Brazilian Symposium on Computer Graphics and Image Processing)},
+  address   = {Curitiba, Brazil},
+  pages     = {218--225},                               % VERIFY
+  year      = {2004},
+  doi       = {10.1109/SIBGRA.2004.1352965},            % VERIFY
+}
+
+% ---------- Wrap&Zip: tech report (what you quoted) + journal version ----------
+@techreport{rossignac1999wrapzipreport,
+  author      = {Rossignac, Jarek and Szymczak, Andrzej},
+  title       = {Wrap\&Zip: Linear Decoding of Planar Triangle Graphs},
+  institution = {GVU Center, Georgia Institute of Technology},
+  number      = {GIT-GVU-99-08},                        % VERIFY
+  year        = {1999},
+  month       = {feb},
+}
+
+@article{rossignac1999wrapzip,
+  author  = {Rossignac, Jarek and Szymczak, Andrzej},
+  title   = {Wrap\&Zip Decompression of the Connectivity of Triangle Meshes Compressed with Edgebreaker},
+  journal = {Computational Geometry},
+  volume  = {14},
+  number  = {1--3},
+  pages   = {119--135},                                 % VERIFY
+  year    = {1999},
+  doi     = {10.1016/S0925-7721(99)00034-0},            % VERIFY
+}
+
+% ---------- related work mentioned in the slides ----------
+@inproceedings{king1999guaranteed,
+  author    = {King, Davis and Rossignac, Jarek},
+  title     = {Guaranteed 3.67v Bit Encoding of Planar Triangle Graphs},
+  booktitle = {Proceedings of the 11th Canadian Conference on Computational Geometry (CCCG)},
+  address   = {Vancouver},
+  pages     = {146--149},                               % VERIFY
+  year      = {1999},
+}
+
+@article{isenburg2001spirale,
+  author  = {Isenburg, Martin and Snoeyink, Jack},
+  title   = {Spirale Reversi: Reverse Decoding of the Edgebreaker Encoding},
+  journal = {Computational Geometry},
+  volume  = {20},
+  number  = {1--2},
+  pages   = {39--52},                                   % VERIFY
+  year    = {2001},
+}
+
+@article{isenburg2003outofcore,
+  author  = {Isenburg, Martin and Gumhold, Stefan},
+  title   = {Out-of-Core Compression for Gigantic Polygon Meshes},
+  journal = {ACM Transactions on Graphics (Proc. SIGGRAPH)},
+  volume  = {22},
+  number  = {3},
+  pages   = {935--942},                                 % VERIFY
+  year    = {2003},
+}
+
+@inproceedings{rossignac2001zipandwrap,
+  author    = {Rossignac, Jarek and Safonova, Alla and Szymczak, Andrzej},
+  title     = {3{D} Compression Made Simple: {E}dgebreaker with {ZipandWrap} on a Corner-Table},
+  booktitle = {Proceedings of Shape Modeling International},
+  address   = {Genova, Italy},
+  pages     = {278--283},                               % VERIFY
+  year      = {2001},
+}
+
+% ---------- optional background (other connectivity coders) ----------
+@inproceedings{deering1995geometry,
+  author    = {Deering, Michael},
+  title     = {Geometry Compression},
+  booktitle = {Proceedings of SIGGRAPH '95},
+  pages     = {13--20},
+  year      = {1995},
+  doi       = {10.1145/218380.218391},                  % VERIFY
+}
+
+@inproceedings{touma1998triangle,
+  author    = {Touma, Costa and Gotsman, Craig},
+  title     = {Triangle Mesh Compression},
+  booktitle = {Proceedings of Graphics Interface '98},
+  pages     = {26--34},                                 % VERIFY
+  year      = {1998},
+}
+
+@inproceedings{gumhold1998realtime,
+  author    = {Gumhold, Stefan and Strasser, Wolfgang},
+  title     = {Real Time Compression of Triangle Mesh Connectivity},
+  booktitle = {Proceedings of SIGGRAPH '98},
+  pages     = {133--140},                               % VERIFY
+  year      = {1998},
+  doi       = {10.1145/280814.280836},                  % VERIFY
+}
+
+% ---------- the slide deck (fill in the real source!) ----------
+@misc{eb-slides,
+  title        = {Edgebreaker: Connectivity Compression for Triangle Meshes},
+  note         = {Lecture slides based on Rossignac, IEEE TVCG 1999},
+  howpublished = {Lecture slides},
+  url          = {https://graphics.stanford.edu/courses/cs468-08-winter/slides/sid2.pdf},
+  urldate      = {2026-11-03},
+}
