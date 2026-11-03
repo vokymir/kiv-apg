@@ -151,15 +151,15 @@
     mid: [1/1999 \ Edgebreaker \ #text(size: 0.8em, weight: "regular")[J. Rossignac, IEEE TVCG]],
     (
       // --- above the axis ---
-      ev(1998, 2, "up", 2, [Nagano], image("images/nagano.svg", fit: "contain"), clr: c-cult),
-      ev(1998, 5, "up", 1, [Windows 98], image("images/win98.jpg"), w: 100pt, ih: 40pt, clr: c-tech),
+      ev(1998, 2, "up", 2, [Nagano], image("images/nagano.svg", fit: "contain"), ih: 60pt, clr: c-cult),
+      ev(1998, 5, "up", 1, [Windows 98], image("images/win98.jpg"), w: 100pt, ih: 70pt, clr: c-tech),
       ev(1998, 9, "up", 2, [Google], image("images/google.png"), clr: c-tech),
       ev(1999, 3, "up", 2, [NATO], image("images/nato.png"), al: center, clr: c-pol),
       ev(1999, 5, "up", 1, [SpongeBob], image("images/spongebob.webp"), clr: c-cult),
-      ev(1999, 12, "up", 1, [Putin], image("images/putin.jpg", fit: "contain"), focus: -0.2, al: right, clr: c-pol), // upper part
+      ev(1999, 12, "up", 1, [Putin], image("images/putin.jpg"), focus: 0, ih: 90pt, al: right, clr: c-pol),
       // --- below the axis ---
-      ev(1998, 4, "down", 1, [Duda], image("images/duda.jpg"), focus: 0.1, zoom: 1.4, al: right, clr: c-born), // zoom in on the face
-      ev(1998, 5, "down", 2, [MrBeast], image("images/mrbeast.jpg"), clr: c-born),
+      ev(1998, 4, "down", 1, [Duda], image("images/duda.jpg"), ih: 120pt, al: right, clr: c-born), // zoom in on the face
+      ev(1998, 5, "down", 2, [MrBeast], image("images/mrbeast.jpg"), ih: 60pt, clr: c-born),
       ev(1998, 11, "down", 1, [Half-Life], image("images/half-life.jpg"), al: right, clr: c-tech),
       ev(1999, 3, "down", 2, [Futurama], image("images/futurama.png"), clr: c-cult),
       ev(1999, 6, "down", 1, [Napster], image("images/napster.svg", fit: "contain"), clr: c-tech),
