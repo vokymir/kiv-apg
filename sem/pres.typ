@@ -32,6 +32,29 @@
 
 = Motivace
 
+== Dobový kontext
+
+1998/2 - winter olympics in Nagano
+1998/4 - Jan-Krzysztof Duda is born
+1998/5 - windows98 starts manufacturing
+1998/5 - MrBeast is born
+1998/9 - google is founded
+1998/11 - half-life is released
+1999/1 - edgebreaker
+1999/3 - CZ joins NATO, NATO attacks Yugoslavia, premiere of Futurama
+1999/5 - premiere of SpongeBob SquarePants
+1999/6 - napster was created (later inspiration for pirate bay)
+1999/12 - Putin becomes the de-facto leader of Russia
+
+1999 new english words: carbon footprint, blog, texting
+
+
+#place(horizon + center,
+  [
+    #line(length: 100pt)
+  ]
+)
+
 == Dělení
 
 #pause
