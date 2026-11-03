@@ -34,26 +34,29 @@
 
 == Dobový kontext
 
-1998/2 - winter olympics in Nagano
-1998/4 - Jan-Krzysztof Duda is born
-1998/5 - windows98 starts manufacturing
-1998/5 - MrBeast is born
-1998/9 - google is founded
-1998/11 - half-life is released
-1999/1 - edgebreaker
-1999/3 - CZ joins NATO, NATO attacks Yugoslavia, premiere of Futurama
-1999/5 - premiere of SpongeBob SquarePants
-1999/6 - napster was created (later inspiration for pirate bay)
-1999/12 - Putin becomes the de-facto leader of Russia
-
-1999 new english words: carbon footprint, blog, texting
-
-
-#place(horizon + center,
-  [
-    #line(length: 100pt)
-  ]
-)
+#include "timeline.typ"
+nagano:
+By [1], Fair use, https://en.wikipedia.org/w/index.php?curid=14328465
+win98:
+https://i1.sndcdn.com/artworks-TFheyNniW28o9wre-ddA99Q-t1080x1080.jpg
+google:
+https://logodix.com/logo/55299.png
+nato:
+https://www.nato.int/content/experience-fragments/nato/site/header/english/master/_jcr_content/root/c06_main_header_copy/logo.coreimg.png/1789636393643/nato.png
+sponge bob:
+https://media.craiyon.com/2025-04-21/FWs1FwNsS3WCDomSej0k8w.webp
+putin:
+Autor: Kremlin.ru, CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=163363642
+duda:
+Autor: Gov.pl, CC BY 3.0 pl, https://commons.wikimedia.org/w/index.php?curid=128272581
+mrbeast:
+https://yt3.ggpht.com/nxYrc_1_2f77DoBadyxMTmv7ZpRZapHR5jbuYe7PlPd5cIRJxtNNEYyOC0ZsxaDyJJzXrnJiuDE=s800-c-k-c0x00ffffff-no-rj
+half-life:
+By May be found at the following website: https://valvearchive.com/archive/Half-Life/Half-Life/Art/Box%20Art/front2.jpg, Fair use, https://en.wikipedia.org/w/index.php?curid=13514455
+futurama: (csfd)
+https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/168/087/168087719_geyysj.png
+napster:
+Autor: Jusore – Vlastní dílo, GPLv3, https://commons.wikimedia.org/w/index.php?curid=169974746
 
 == Dělení
 
