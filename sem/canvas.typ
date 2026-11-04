@@ -93,6 +93,10 @@
   s
 }
 #let clers(a, b, c, sym, ..o) = set-t(a, b, c, clr: palette.at(sym), label: sym, ..o.named())
+#let no-highlight = s => {
+  s.hh = none
+  s
+}
 
 // ================= stack =================
 #let push(a, b, ..o) = s => {
