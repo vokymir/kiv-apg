@@ -179,7 +179,27 @@ Kódování: C = 0, S = 100, R = 101, L = 110, E = 111
 #pause
 (CLERS) 0110111101100 bitové pole: #rect()[00101101101100110010110011110110111111001011011010101101101111]
 
-== Vyšší genus?
+
+= Dekomprese
+
+== Možnosti
+
+Existuje víc algoritmů, implementuji spirale-reversi a wrap&zip.
+
+Demonstrováno na wrap&zip, je intuitivnější.
+
+== Animace
+
+#import "anim3.typ"
+
+#figure(
+  alternatives(..anim3.decomp.map(draw.with(size: (80%, 80%)))),
+  caption: [Dekomprese.],
+)
+
+= Vyšší genus
+
+== Díry 
 
 #import "anim2.typ"
 
@@ -188,30 +208,6 @@ Kódování: C = 0, S = 100, R = 101, L = 110, E = 111
   caption: [Komprese díry.],
 )
 
-
-= Dekomprese
-
-== Možnosti
-
-//TODO: basic, spirale-reversi, wrap&zip
-
-
-== Pravidla
-
-// TODO: wrap&zip
-
-// TODO: včetně genusu! ale ten nebude animován
-
-== Animace
-
-// TODO: animace wrap&zip
-
-#import "anim3.typ"
-
-#figure(
-  alternatives(..anim3.decomp.map(draw.with(size: (80%, 80%)))),
-  caption: [Dekomprese.],
-)
 
 = Zdroje
 

@@ -120,8 +120,9 @@
   if s.hh != none and s.hh >= s.h.len() { s.hh = none }
   s
 }
-#let highlight-h(..a) = s => {
-  let i = if a.pos().len() == 0 { -1 } else { a.pos().first() }
+#let highlight-h(..a, i) = s => {
+  // let i = if a.pos().len() == 0 { -1 } else { a.pos().first() }
+  // let i = 0
   s.hh = if i == none { none } else if i < 0 { s.h.len() + i } else { i }
   s
 }
