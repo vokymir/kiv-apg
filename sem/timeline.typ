@@ -13,6 +13,7 @@
   img,
   al: left,
   clr: gray.darken(40%),
+  src: none,
   w: auto,
   ih: auto,
   focus: none, // none = cover/centre as before;  0 = top, 0.5 = middle, 1 = bottom
@@ -23,6 +24,7 @@
   lvl: lvl,
   al: al,
   clr: clr,
+  src: src,
   title: title,
   date: [#m/#y],
   img: img,
@@ -42,11 +44,13 @@
   step: 62pt, // distance axis -> card: level 1 / increment per level
   card-w: 84pt,
   img-h: 46pt,
+  tags: true,
   fs: 9pt,
   cone-alpha: 65%, // cone transparency
   mid-fill: rgb(201, 151, 0),
   mid-size: 12pt,
 ) = block(width: width, height: 2 * H, layout(sz => block(width: sz.width, height: 2 * H, {
+  let events = events.sorted(key: e => e.t)
   set text(size: fs)
   let W = sz.width
   let X = t => t / 24 * W
@@ -81,7 +85,7 @@
 
   // 3) cards: rounded rectangle = header (title + date) + image
   // 3) cards
-  for e in events {
+  for (i, e) in events.enumerate() {
     let dx = card-dx(e, X(e.t))
     let s = stem(e.lvl)
     let cw = wid(e) // card width
@@ -113,6 +117,15 @@
             let m = measure(im)
             move(dx: -(iw - cw) / 2, dy: -calc.max(0pt, m.height - ch) * e.focus, im)
           }
+
+          if tags {
+            place(bottom + right, box(
+              fill: black.transparentize(35%),
+              inset: (x: 2pt, y: 1pt),
+              radius: (top-left: 2pt),
+              text(size: 8pt, fill: white, [#(i + 1)]),
+            ))
+          }
         }),
       ),
     )
@@ -139,34 +152,17 @@
   }
 })))
 
+#let credits(events, size: 0.55em) = {
+  set text(size: size)
+  table(
+    columns: (auto, auto, 1fr), stroke: none, inset: 5pt,
+    ..events.sorted(key: e => e.t).enumerate().map(((i, e)) => ([#(i + 1)], [*#e.title* (#e.date)], e.src)).flatten(),
+  )
+}
+
 // ---------- the slide ----------
 #let c-tech = rgb("#2b6cb0")
 #let c-pol = rgb("#c53030")
 #let c-cult = rgb("#6b46c1")
 #let c-born = rgb("#2f855a")
 
-== Dobový kontext
-#figure(
-  timeline(
-    mid: [1/1999 \ Edgebreaker \ #text(size: 0.8em, weight: "regular")[J. Rossignac, IEEE TVCG]],
-    (
-      // --- above the axis ---
-      ev(1998, 2, "up", 2, [Nagano], image("images/nagano.svg", fit: "contain"), ih: 60pt, clr: c-cult),
-      ev(1998, 5, "up", 1, [Windows 98], image("images/win98.jpg"), w: 100pt, ih: 70pt, clr: c-tech),
-      ev(1998, 9, "up", 2, [Google], image("images/google.png"), clr: c-tech),
-      ev(1999, 3, "up", 2, [NATO], image("images/nato.png"), al: center, clr: c-pol),
-      ev(1999, 5, "up", 1, [SpongeBob], image("images/spongebob.webp"), clr: c-cult),
-      ev(1999, 12, "up", 1, [Putin], image("images/putin.jpg"), focus: 0, ih: 90pt, al: right, clr: c-pol),
-      // --- below the axis ---
-      ev(1998, 4, "down", 1, [Duda], image("images/duda.jpg"), ih: 120pt, al: right, clr: c-born), // zoom in on the face
-      ev(1998, 5, "down", 2, [MrBeast], image("images/mrbeast.jpg"), ih: 60pt, clr: c-born),
-      ev(1998, 11, "down", 1, [Half-Life], image("images/half-life.jpg"), al: right, clr: c-tech),
-      ev(1999, 3, "down", 2, [Futurama], image("images/futurama.png"), clr: c-cult),
-      ev(1999, 6, "down", 1, [Napster], image("images/napster.svg", fit: "contain"), clr: c-tech),
-    ),
-    spans: (
-      (t0: 17, t1: 24, lvl: 0.40, body: [nová slova: _carbon footprint_, _blog_, _texting_]),
-    ),
-  ),
-  caption: [Dobový kontext vzniku algoritmu Edgebreaker.],
-)

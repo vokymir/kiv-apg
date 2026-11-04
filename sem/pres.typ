@@ -32,31 +32,60 @@
 
 = Motivace
 
+
 == Dobový kontext
 
-#include "timeline.typ"
-nagano:
-By [1], Fair use, https://en.wikipedia.org/w/index.php?curid=14328465
-win98:
-https://i1.sndcdn.com/artworks-TFheyNniW28o9wre-ddA99Q-t1080x1080.jpg
-google:
-https://logodix.com/logo/55299.png
-nato:
-https://www.nato.int/content/experience-fragments/nato/site/header/english/master/_jcr_content/root/c06_main_header_copy/logo.coreimg.png/1789636393643/nato.png
-sponge bob:
-https://media.craiyon.com/2025-04-21/FWs1FwNsS3WCDomSej0k8w.webp
-putin:
-Autor: Kremlin.ru, CC BY 4.0, https://commons.wikimedia.org/w/index.php?curid=163363642
-duda:
-Autor: Gov.pl, CC BY 3.0 pl, https://commons.wikimedia.org/w/index.php?curid=128272581
-mrbeast:
-https://yt3.ggpht.com/nxYrc_1_2f77DoBadyxMTmv7ZpRZapHR5jbuYe7PlPd5cIRJxtNNEYyOC0ZsxaDyJJzXrnJiuDE=s800-c-k-c0x00ffffff-no-rj
-half-life:
-By May be found at the following website: https://valvearchive.com/archive/Half-Life/Half-Life/Art/Box%20Art/front2.jpg, Fair use, https://en.wikipedia.org/w/index.php?curid=13514455
-futurama: (csfd)
-https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/168/087/168087719_geyysj.png
-napster:
-Autor: Jusore – Vlastní dílo, GPLv3, https://commons.wikimedia.org/w/index.php?curid=169974746
+#import "timeline.typ"
+#import "timeline.typ": ev, c-cult, c-tech, c-born, c-pol
+
+
+#let src = (
+  nagano: [#link("https://en.wikipedia.org/w/index.php?curid=14328465")[Wikipedia, _fair use_]],
+  win98: [#link("https://i1.sndcdn.com/artworks-TFheyNniW28o9wre-ddA99Q-t1080x1080.jpg")[SoundCloud (artwork)]],
+  google: [#link("https://logodix.com/logo/55299.png")[logodix.com]],
+  nato: [#link("https://www.nato.int/content/experience-fragments/nato/site/header/english/master/_jcr_content/root/c06_main_header_copy/logo.coreimg.png/1789636393643/nato.png")[nato.int]],
+  spongebob: [#link("https://media.craiyon.com/2025-04-21/FWs1FwNsS3WCDomSej0k8w.webp")[craiyon.com]],
+  putin: [Kremlin.ru, #link("https://creativecommons.org/licenses/by/4.0/")[CC BY 4.0], #link("https://commons.wikimedia.org/w/index.php?curid=163363642")[Wikimedia Commons]],
+  duda: [Gov.pl, #link("https://creativecommons.org/licenses/by/3.0/pl/")[CC BY 3.0 PL], #link("https://commons.wikimedia.org/w/index.php?curid=128272581")[Wikimedia Commons]],
+  mrbeast: [#link("https://yt3.ggpht.com/nxYrc_1_2f77DoBadyxMTmv7ZpRZapHR5jbuYe7PlPd5cIRJxtNNEYyOC0ZsxaDyJJzXrnJiuDE=s800-c-k-c0x00ffffff-no-rj")[YouTube (avatar kanálu)]],
+  halflife: [#link("https://valvearchive.com/archive/Half-Life/Half-Life/Art/Box%20Art/front2.jpg")[Valve, valvearchive.com]; #link("https://en.wikipedia.org/w/index.php?curid=13514455")[Wikipedia _fair use_]],
+  futurama: [#link("https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/168/087/168087719_geyysj.png")[ČSFD (plakát)]],
+  napster: [Jusore, GPLv3, #link("https://commons.wikimedia.org/w/index.php?curid=169974746")[Wikimedia Commons]],
+)
+
+#let timeline-events = (
+  ev(1998, 2, "up", 2, [Nagano], image("images/nagano.svg", fit: "contain"), src: src.nagano, ih: 60pt, clr: c-cult),
+  ev(1998, 5, "up", 1, [Windows 98], image("images/win98.jpg"), src: src.win98, w: 100pt, ih: 70pt, clr: c-tech),
+  ev(1998, 9, "up", 2, [Google], image("images/google.png"), src: src.google, clr: c-tech),
+  ev(1999, 3, "up", 2, [NATO], image("images/nato.png"), src: src.nato, al: center, clr: c-pol),
+  ev(1999, 5, "up", 1, [SpongeBob], image("images/spongebob.webp"), src: src.spongebob, ih: 70pt, clr: c-cult),
+  ev(1999, 12, "up", 1, [Putin], image("images/putin.jpg"), src: src.putin, focus: 0, ih: 110pt, al: right, clr: c-pol),
+  ev(1998, 4, "down", 1, [Duda], image("images/duda.jpg"), src: src.duda, ih: 120pt, al: right, clr: c-born),
+  ev(1998, 5, "down", 2, [MrBeast], image("images/mrbeast.jpg"), src: src.mrbeast, ih: 60pt, clr: c-born),
+  ev(1998, 11, "down", 1, [Half-Life], image("images/half-life.jpg"), src: src.halflife, ih: 90pt, al: right, clr: c-tech),
+  ev(1999, 3, "down", 2, [Futurama], image("images/futurama.png"), src: src.futurama, clr: c-cult),
+  ev(1999, 6, "down", 1, [Napster], image("images/napster.svg", fit: "contain"), src: src.napster, clr: c-tech),
+)
+
+#figure(
+  timeline.timeline(
+    mid: [1/1999 \ Edgebreaker \ #text(size: 0.8em, weight: "regular")[J. Rossignac, IEEE TVCG]],
+    timeline-events,
+    spans: (
+      (t0: 17, t1: 24, lvl: 0.40, body: [nová slova: _carbon footprint_, _blog_, _texting_]),
+    ),
+  ),
+  caption: [Dobový kontext vzniku algoritmu Edgebreaker.],
+)
+
+#slides-only()[
+  #figure(
+    image("images/rossignac.jpg", height: 90%),
+    caption: [Jarek Rossignac]
+    
+  )
+]
+
 
 == Dělení
 
@@ -109,6 +138,7 @@ $ forall v in V: $
 #figure(
   alternatives(..anim1.comp.map(draw.with(size: (80%, 80%)))),
   caption: [Jednoduchá komprese.],
+ 
 )
 
 == Vyšší genus?
@@ -161,7 +191,7 @@ $ forall v in V: $
   for (i, f) in items.enumerate() {
     let loc = f.location()
     link(loc)[
-      Obrázek #(i + 1): #f.caption.body
+      Figure #(i + 1): #f.caption.body
       #box(width: 1fr, repeat[.])
       // touying shows THE slide
       #utils.slide-counter.at(loc).first()
@@ -170,11 +200,17 @@ $ forall v in V: $
   }
 }
 
-== Obrázky
+
+== Seznam figures
 
 #figure-outline()
 
+== Obrázky (dobový kontext)
+
+#timeline.credits(timeline-events, size: 1em)
+
 == Reference
+
 #set text(size: 0.6em)
 
 Originální paper @rossignac1999edgebreaker
@@ -183,4 +219,5 @@ Významné vylepšení @lewiner2004efficient
 Wrap & Zip @rossignac1999wrapzipreport
 Inspirace animací @eb-slides
 
-#bibliography("refs.bib", title: none, style: "ieee")
+#bibliography("./refs.bib", title: none, style: "ieee")
+
