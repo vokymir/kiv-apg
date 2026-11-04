@@ -11,7 +11,7 @@
     title: [Edgebreaker],
     subtitle: [Komprese trojúhelníkových sítí],
     author: [Jakub Vokoun],
-    date: datetime.today(),
+    date: "5.11.2026",
     institution: [Fakulta aplikovaných věd ZČU],
     contact: [#link("mailto:javok@students.zcu.cz")],
     // logo: image("./fav_logo/FAV_cmyk.pdf"),
@@ -206,18 +206,19 @@ Demonstrováno na wrap&zip, je intuitivnější.
 
 == Řešení
 
-- obecnější S
-- navíc ukládání topologie
+Zavádíme obecnější operaci S.
+
+Navíc je třeba ukládání topologie.
 
 #pause
 === Díry
 
-objevení díry => push topologie s délkou díry
+Objevení díry => push topologie s délkou díry.
 
 #pause
 === Handly
 
-následuje S => push topologie se "zipem"
+Následuje S => push topologie se "zipem".
 
 == Animace
 
