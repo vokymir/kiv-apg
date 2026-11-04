@@ -126,6 +126,29 @@ CLERS řetězec
 CLRSLRCLEE
 ]
 
+== Klasifikace
+
+#import "CLERS.typ"
+
+#figure(
+  rect(height: 90%, stroke: none)[
+    #grid(
+  columns: 3,
+  CLERS.C,
+  CLERS.L,
+  CLERS.R,
+)
+
+    #grid(
+  columns: 2,
+  CLERS.S,
+  CLERS.E,
+)
+],
+
+caption: [Základní CLERS operace.]
+)
+
 = Komprese
 
 == Pravidla
