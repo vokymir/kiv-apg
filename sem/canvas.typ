@@ -3,29 +3,45 @@
 #let key(..ids) = ids.pos().map(str).sorted().join("-")        // unordered key
 
 #let palette = (
-  C: yellow, L: rgb("#d9a066"), R: rgb("#6fa8f0"),
-  S: rgb("#5fe05f"), E: rgb("#f04040"), M: rgb("#c58af9"),
+  C: yellow,
+  L: rgb("#d9a066"),
+  R: rgb("#6fa8f0"),
+  S: rgb("#5fe05f"),
+  E: rgb("#f04040"),
+  M: rgb("#c58af9"),
 )
 #let gate-clr = rgb(255, 0, 255)
 #let gate-w = 8pt
 
 // ================= setup ops =================
-#let def-border(..o) = s => { s.border = (:..s.border, ..o.named()); s }
+#let def-border(..o) = s => {
+  s.border = (:..s.border, ..o.named())
+  s
+}
 #let def-stack(..o) = s => {
   s.stack-def = (pos: (0, 0), n: 4, w: 70, h: 30, title: [Stack], ..o.named())
   s
 }
 #let def-hist(..o) = s => {
-  s.hist-def = (pos: (0, 0), size: 20pt, prefix: [History = ], ..o.named())
+  s.hist-def = (pos: (0, 0), size: 20pt, prefix: [Historie = ], ..o.named())
   s
 }
 
 // ================= geometry ops =================
-#let V(x, y, ..o) = s => {                 // vertex; number = order of creation
+#let V(x, y, ..o) = s => {
+  // vertex; number = order of creation
   s.n += 1
   s.v.insert(str(s.n), (
-    id: s.n, x: L(x), y: L(y), vis: true, clr: black, r: 3pt,
-    label: auto, angle: auto, off: (0, 0), ..o.named(),
+    id: s.n,
+    x: L(x),
+    y: L(y),
+    vis: true,
+    clr: black,
+    r: 3pt,
+    label: auto,
+    angle: auto,
+    off: (0, 0),
+    ..o.named(),
   ))
   s
 }
@@ -37,7 +53,10 @@
   s.e.insert(key(a, b), (i: (a, b), clr: green, w: 2.5pt, dash: none, ..o.named()))
   s
 }
-#let set-v(i, ..o) = s => { s.v.at(str(i)) = (:..s.v.at(str(i)), ..o.named()); s }
+#let set-v(i, ..o) = s => {
+  s.v.at(str(i)) = (:..s.v.at(str(i)), ..o.named())
+  s
+}
 #let set-t(a, b, c, ..o) = s => {
   let k = key(a, b, c)
   s.t.at(k) = (:..s.t.at(k), ..o.named())
@@ -48,9 +67,18 @@
   s.e.at(k) = (..s.e.at(k), ..o.named())
   s
 }
-#let del-v(i) = s => { let _ = s.v.remove(str(i)); s }
-#let del-t(a, b, c) = s => { let _ = s.t.remove(key(a, b, c)); s }
-#let del-e(a, b) = s => { let _ = s.e.remove(key(a, b)); s }
+#let del-v(i) = s => {
+  let _ = s.v.remove(str(i))
+  s
+}
+#let del-t(a, b, c) = s => {
+  let _ = s.t.remove(key(a, b, c))
+  s
+}
+#let del-e(a, b) = s => {
+  let _ = s.e.remove(key(a, b))
+  s
+}
 
 #let show-v(i, ..o) = set-v(i, vis: true, ..o.named())
 #let hide-v(i) = set-v(i, vis: false)
@@ -67,7 +95,8 @@
 #let clers(a, b, c, sym, ..o) = set-t(a, b, c, clr: palette.at(sym), label: sym, ..o.named())
 
 // ================= stack =================
-#let push(a, b, ..o) = s => {              // cell "a-b" + dashed highlighted edge
+#let push(a, b, ..o) = s => {
+  // cell "a-b" + dashed highlighted edge
   s.stack.push((a, b))
   s.e.insert(key(a, b), (i: (a, b), clr: gate-clr, w: gate-w, dash: "dotted", ..o.named()))
   s
@@ -96,7 +125,11 @@
   s.hh = if i == none { none } else if i < 0 { s.h.len() + i } else { i }
   s
 }
-#let set-h(str-hist) = s => { s.h = str-hist.clusters(); s.hh = none; s }
+#let set-h(str-hist) = s => {
+  s.h = str-hist.clusters()
+  s.hh = none
+  s
+}
 
 // ================= script -> states =================
 #let next = "next"                          // = #pause
@@ -104,15 +137,24 @@
 #let anim(..items) = {
   let states = ()
   let s = (
-    v: (:), t: (:), e: (:), n: 0,
-    h: (), hh: none, stack: (),
-    stack-def: none, hist-def: none,
+    v: (:),
+    t: (:),
+    e: (:),
+    n: 0,
+    h: (),
+    hh: none,
+    stack: (),
+    stack-def: none,
+    hist-def: none,
     border: (clr: black, w: 2.5pt),
   )
   let dirty = false
   for it in items.pos().flatten() {
     if it == "next" {
-      if dirty { states.push(s); dirty = false }
+      if dirty {
+        states.push(s)
+        dirty = false
+      }
     } else {
       s = it(s)
       dirty = true
@@ -146,8 +188,14 @@
   block(width: size.at(0), height: size.at(1), layout(sz => {
     let (cx, cy) = (sz.width / 2, sz.height / 2)
     let xy = (x, y) => (cx + x, cy + sg * y)
-    let pt = k => { let p = s.v.at(str(k)); xy(p.x, p.y) }
-    let gp = k => { let p = s.vpos.at(str(k)); xy(p.at(0), p.at(1)) }
+    let pt = k => {
+      let p = s.v.at(str(k))
+      xy(p.x, p.y)
+    }
+    let gp = k => {
+      let p = s.vpos.at(str(k))
+      xy(p.at(0), p.at(1))
+    }
     let at-center = (x, y, body) => context {
       let m = measure(body)
       place(top + left, dx: x - m.width / 2, dy: y - m.height / 2, body)
@@ -208,15 +256,22 @@
     }
     for e in cnt.values().filter(e => e.n == 1) {
       let (p, q) = e.p.map(pt)
-      place(top + left, line(start: p, end: q,
-        stroke: stroke(paint: s.border.clr, thickness: s.border.w, cap: "round")))
+      place(top + left, line(start: p, end: q, stroke: stroke(
+        paint: s.border.clr,
+        thickness: s.border.w,
+        cap: "round",
+      )))
     }
     // 4) highlighted edges (gate, stack gates, ...)
     for e in s.e.values() {
       let (p, q) = e.i.map(pt)
       let dash = e.at("dash", default: none)
       place(top + left, line(start: p, end: q, stroke: stroke(
-        paint: e.clr, thickness: e.w, cap: if dash == none { "round" } else { "butt" }, dash: dash)))
+        paint: e.clr,
+        thickness: e.w,
+        cap: if dash == none { "round" } else { "butt" },
+        dash: dash,
+      )))
     }
     // 5) visible vertices + labels
     for p in s.v.values() {
@@ -251,7 +306,10 @@
         let filled = j < s.stack.len()
         let head = j == s.stack.len() - 1
         place(top + left, dx: x - w / 2, dy: y - h / 2, rect(
-          width: w, height: h, inset: 0pt, stroke: 1pt + black,
+          width: w,
+          height: h,
+          inset: 0pt,
+          stroke: 1pt + black,
           fill: if head { gate-clr.lighten(60%) } else { none },
           align(center + horizon, if filled {
             text(size: cell-size, str(s.stack.at(j).at(0)) + "-" + str(s.stack.at(j).at(1)))
@@ -266,17 +324,26 @@
       let d = s.hist-def
       let (hx, hy) = d.pos.map(L)
       let (x, y) = xy(hx, hy)
-      let syms = s.h.enumerate().map(((i, c)) => if i == s.hh {
-        box(fill: palette.at(c, default: yellow), inset: (x: 2pt), outset: (y: 3pt), radius: 2pt, c)
-      } else { c })
-      place(top + left, dx: x, dy: y, text(size: d.size, { d.prefix; syms.join() }))
+      let syms = s
+        .h
+        .enumerate()
+        .map(((i, c)) => if i == s.hh {
+          box(fill: palette.at(c, default: yellow), inset: (x: 2pt), outset: (y: 3pt), radius: 2pt, c)
+        } else { c })
+      place(top + left, dx: x, dy: y, text(size: d.size, {
+        d.prefix
+        syms.join()
+      }))
     }
   }))
 }
 
 // ================= caption chips =================
 #let eb-tag(clr, body, fg: black) = box(
-  fill: clr, inset: (x: 3pt), outset: (y: 3pt), radius: 2pt,
+  fill: clr,
+  inset: (x: 3pt),
+  outset: (y: 3pt),
+  radius: 2pt,
   text(fill: fg, weight: "bold", body),
 )
 #let eb-sym(s) = eb-tag(palette.at(upper(s)), upper(s))

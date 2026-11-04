@@ -167,6 +167,18 @@ vyšším genusem.
  
 )
 
+== Výsledný soubor
+
+Geometrie vrcholů: #rect()[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21]
+
+CLERS řetězec: #rect()[CCRRRSLCRSERRELCRRRCRRRE]
+
+#pause
+Kódování: C = 0, S = 100, R = 101, L = 110, E = 111
+
+#pause
+(CLERS) 0110111101100 bitové pole: #rect()[00101101101100110010110011110110111111001011011010101101101111]
+
 == Vyšší genus?
 
 #import "anim2.typ"
