@@ -88,37 +88,22 @@
 ]
 
 
-== Dělení
+= Definice problému
 
-#pause
-=== Geometrie
+== Mesh: Geometrie + Konektivita
 
-$ forall v in V: $
+#import "mesh-def.typ"
 
-#pause
-
-#alternatives[
-  $ v = (x, y, z) $
-][
-  $ v = (x, y, z, #text(red)[$n, "uv", dots$]) $
-]
-
-#pause
-=== Konektivita
-
-#let eqs = (
-  $ forall e in E: e = (e_i, e_j) $,
-  $ forall t in T: t = (v_i, v_j, v_k) $,
-  $ forall c in 3T: c = (c_("op")) $,
+#figure(
+  alternatives(..mesh-def.comp.map(draw.with(size: (80%, 80%)))),
+  caption: [Trojúhelníková mesh.],
+ 
 )
 
-#pause
+== Jak schovat informaci?
 
-#alternatives(
-  ..range(1, eqs.len() + 1).map(n => eqs.slice(0, n).join()),
-  $ V : 2F : 3E $,
-)
-
+- pořadí vertexů
+- clers string
 
 = Komprese
 
