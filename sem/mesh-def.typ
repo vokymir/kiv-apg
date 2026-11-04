@@ -2,9 +2,9 @@
 
 #let verts = (
   V(-80, -70, off: (-8, 0), label: [V1]),
-  V(-80, 70, off: (-8, 0), label: [V2]),
+  V(80, -70, off: (8, 0), label: [V2]),
   V(80, 70, off: (8, 0), label: [V3]),
-  V(80, -70, off: (8, 0), label: [V4]),
+  V(-80, 70, off: (-8, 0), label: [V4]),
 )
 #let tris = (
   T(1, 2, 3, label: [T0]),

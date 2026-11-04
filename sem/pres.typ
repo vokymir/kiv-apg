@@ -54,7 +54,7 @@
 )
 
 #let timeline-events = (
-  ev(1998, 2, "up", 2, [Nagano], image("images/nagano.svg", fit: "contain"), src: src.nagano, ih: 60pt, clr: c-cult),
+  ev(1998, 2, "up", 2, [Nagano], image("images/nagano.svg", fit: "contain"), src: src.nagano, ih: 55pt, clr: c-cult),
   ev(1998, 5, "up", 1, [Windows 98], image("images/win98.jpg"), src: src.win98, w: 100pt, ih: 70pt, clr: c-tech),
   ev(1998, 9, "up", 2, [Google], image("images/google.png"), src: src.google, clr: c-tech),
   ev(1999, 3, "up", 2, [NATO], image("images/nato.png"), src: src.nato, al: center, clr: c-pol),
@@ -62,7 +62,8 @@
   ev(1999, 12, "up", 1, [Putin], image("images/putin.jpg"), src: src.putin, focus: 0, ih: 110pt, al: right, clr: c-pol),
   ev(1998, 4, "down", 1, [Duda], image("images/duda.jpg"), src: src.duda, ih: 120pt, al: right, clr: c-born),
   ev(1998, 5, "down", 2, [MrBeast], image("images/mrbeast.jpg"), src: src.mrbeast, ih: 60pt, clr: c-born),
-  ev(1998, 11, "down", 1, [Half-Life], image("images/half-life.jpg"), src: src.halflife, ih: 90pt, al: right, clr: c-tech),
+  ev(1998, 11, "down", 1, [Half-Life], image("images/half-life.jpg"), src:
+  src.halflife, ih: 90pt, al: right, clr: c-cult),
   ev(1999, 3, "down", 2, [Futurama], image("images/futurama.png"), src: src.futurama, clr: c-cult),
   ev(1999, 6, "down", 1, [Napster], image("images/napster.svg", fit: "contain"), src: src.napster, clr: c-tech),
 )
@@ -81,40 +82,38 @@
 // nad čím jarek přemýšlel?
 #slides-only()[
   #figure(
-    image("images/rossignac.jpg", height: 80%),
-    caption: [Jarek Rossignac, zdroj: #link("http://kelvinkuo.com/wp-content/uploads/2010/03/KKK_6258.jpg")]
-    
+    image("images/rossignac.jpg", height: 70%),
+    caption: [Jarek Rossignac.]
   )
+  zdroj: #link("http://kelvinkuo.com/wp-content/uploads/2010/03/KKK_6258.jpg")
 ]
 
 
 = Definice problému
 
-== Mesh: Geometrie + Konektivita
+== Mesh: geometrie + konektivita
 
 #import "mesh-def.typ"
 
 #figure(
   alternatives(..mesh-def.comp.map(draw.with(size: (80%, 80%)))),
-  caption: [Trojúhelníková mesh.],
+  caption: [Trojúhelníková síť (mesh).],
  
 )
 
 == Jak schovat informaci?
 
+// #rect(height: 1%, stroke: none)
 #columns(2)[
+#pause
 pořadí vertexů
 
   [V1 V2 V3]\
 #pause
   [V1 V3 V2]\
-#pause
   [V2 V1 V3]\
-#pause
   [V3 V1 V2]\
-#pause
   [V2 V3 V1]\
-#pause
   [V3 V2 V1]
 
 #colbreak()
@@ -151,15 +150,12 @@ caption: [Základní CLERS operace.]
 
 = Komprese
 
-== Pravidla
+== Omezení
 
-// ...CLERS TODO
+Mesh musí být *orientovatelný manifold* homeomorfní s koulí/kruhem.
 
-
-// navíc manifold & orientovaný
-
-// díry a handly zvládneme
-
+Lehce upravená verze algoritmu zvládne i _díry_ a _handly_, obecně meshe s
+vyšším genusem.
 
 == Animace
 
