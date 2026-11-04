@@ -102,8 +102,29 @@
 
 == Jak schovat informaci?
 
-- pořadí vertexů
-- clers string
+#columns(2)[
+pořadí vertexů
+
+  [V1 V2 V3]\
+#pause
+  [V1 V3 V2]\
+#pause
+  [V2 V1 V3]\
+#pause
+  [V3 V1 V2]\
+#pause
+  [V2 V3 V1]\
+#pause
+  [V3 V2 V1]
+
+#colbreak()
+
+#pause
+CLERS řetězec
+
+#pause
+CLRSLRCLEE
+]
 
 = Komprese
 
