@@ -78,10 +78,11 @@
   caption: [Dobový kontext vzniku algoritmu Edgebreaker.],
 )
 
+// nad čím jarek přemýšlel?
 #slides-only()[
   #figure(
-    image("images/rossignac.jpg", height: 90%),
-    caption: [Jarek Rossignac]
+    image("images/rossignac.jpg", height: 80%),
+    caption: [Jarek Rossignac, zdroj: #link("http://kelvinkuo.com/wp-content/uploads/2010/03/KKK_6258.jpg")]
     
   )
 ]
