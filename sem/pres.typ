@@ -88,6 +88,11 @@
   zdroj: #link("http://kelvinkuo.com/wp-content/uploads/2010/03/KKK_6258.jpg")
 ]
 
+#focus-slide()[
+
+  #align(center)[disk vs RAM]
+]
+
 
 = Definice problému
 
@@ -98,7 +103,6 @@
 #figure(
   alternatives(..mesh-def.comp.map(draw.with(size: (80%, 80%)))),
   caption: [Trojúhelníková síť (mesh).],
- 
 )
 
 == Jak schovat informaci?
@@ -199,13 +203,28 @@ Demonstrováno na wrap&zip, je intuitivnější.
 
 = Vyšší genus
 
-== Díry 
+== Řešení
+
+- obecnější S
+- navíc ukládání topologie
+
+#pause
+=== Díry
+
+objevení díry => push topologie s délkou díry
+
+#pause
+=== Handly
+
+následuje S => push topologie se "zipem"
+
+== Animace
 
 #import "anim2.typ"
 
 #figure(
   alternatives(..anim2.comp.map(draw.with(size: (80%, 80%)))),
-  caption: [Komprese díry.],
+  caption: [Složitější komprese.],
 )
 
 
@@ -235,7 +254,7 @@ Demonstrováno na wrap&zip, je intuitivnější.
 }
 
 
-== Seznam figures
+== Seznam _figures_
 
 #figure-outline()
 
