@@ -83,4 +83,5 @@
   next,
   del-t(7, 1, 8),
   no-gate,
+  no-highlight,
 )
