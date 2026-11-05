@@ -28,6 +28,24 @@
 
 #set heading(numbering: numbly("{1}.", default: "1.1"))
 
+
+#set figure(numbering: none)                    // ignore Typst's per-subslide counter
+
+#let fig-key(f) = repr(f.caption.body)          // same caption = same figure
+
+// number of the figure at `loc` = distinct captions up to and including it
+#let fig-index(loc) = {
+  let seen = ()
+  for f in query(selector(figure).before(loc)) {
+    if f.caption != none and fig-key(f) not in seen { seen.push(fig-key(f)) }
+  }
+  seen.len()
+}
+
+#show figure.caption: it => context [
+  Obrázek #fig-index(it.location())#it.separator #it.body
+]
+
 #title-slide(logo: image("./fav_logo/FAV_cmyk.pdf", width: 20%))
 
 = Motivace
@@ -36,20 +54,28 @@
 == Dobový kontext
 
 #import "timeline.typ"
-#import "timeline.typ": ev, c-cult, c-tech, c-born, c-pol
+#import "timeline.typ": c-born, c-cult, c-pol, c-tech, ev
 
 
 #let src = (
   nagano: [#link("https://en.wikipedia.org/w/index.php?curid=14328465")[Wikipedia, _fair use_]],
   win98: [#link("https://i1.sndcdn.com/artworks-TFheyNniW28o9wre-ddA99Q-t1080x1080.jpg")[SoundCloud (artwork)]],
   google: [#link("https://logodix.com/logo/55299.png")[logodix.com]],
-  nato: [#link("https://www.nato.int/content/experience-fragments/nato/site/header/english/master/_jcr_content/root/c06_main_header_copy/logo.coreimg.png/1789636393643/nato.png")[nato.int]],
+  nato: [#link(
+    "https://www.nato.int/content/experience-fragments/nato/site/header/english/master/_jcr_content/root/c06_main_header_copy/logo.coreimg.png/1789636393643/nato.png",
+  )[nato.int]],
   spongebob: [#link("https://media.craiyon.com/2025-04-21/FWs1FwNsS3WCDomSej0k8w.webp")[craiyon.com]],
   putin: [Kremlin.ru, #link("https://creativecommons.org/licenses/by/4.0/")[CC BY 4.0], #link("https://commons.wikimedia.org/w/index.php?curid=163363642")[Wikimedia Commons]],
   duda: [Gov.pl, #link("https://creativecommons.org/licenses/by/3.0/pl/")[CC BY 3.0 PL], #link("https://commons.wikimedia.org/w/index.php?curid=128272581")[Wikimedia Commons]],
-  mrbeast: [#link("https://yt3.ggpht.com/nxYrc_1_2f77DoBadyxMTmv7ZpRZapHR5jbuYe7PlPd5cIRJxtNNEYyOC0ZsxaDyJJzXrnJiuDE=s800-c-k-c0x00ffffff-no-rj")[YouTube (avatar kanálu)]],
-  halflife: [#link("https://valvearchive.com/archive/Half-Life/Half-Life/Art/Box%20Art/front2.jpg")[Valve, valvearchive.com]; #link("https://en.wikipedia.org/w/index.php?curid=13514455")[Wikipedia _fair use_]],
-  futurama: [#link("https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/168/087/168087719_geyysj.png")[ČSFD (plakát)]],
+  mrbeast: [#link(
+    "https://yt3.ggpht.com/nxYrc_1_2f77DoBadyxMTmv7ZpRZapHR5jbuYe7PlPd5cIRJxtNNEYyOC0ZsxaDyJJzXrnJiuDE=s800-c-k-c0x00ffffff-no-rj",
+  )[YouTube (avatar kanálu)]],
+  halflife: [#link(
+      "https://valvearchive.com/archive/Half-Life/Half-Life/Art/Box%20Art/front2.jpg",
+    )[Valve, valvearchive.com]; #link("https://en.wikipedia.org/w/index.php?curid=13514455")[Wikipedia _fair use_]],
+  futurama: [#link(
+    "https://image.pmgstatic.com/cache/resized/w663/files/images/film/posters/168/087/168087719_geyysj.png",
+  )[ČSFD (plakát)]],
   napster: [Jusore, GPLv3, #link("https://commons.wikimedia.org/w/index.php?curid=169974746")[Wikimedia Commons]],
 )
 
@@ -62,8 +88,18 @@
   ev(1999, 12, "up", 1, [Putin], image("images/putin.jpg"), src: src.putin, focus: 0, ih: 110pt, al: right, clr: c-pol),
   ev(1998, 4, "down", 1, [Duda], image("images/duda.jpg"), src: src.duda, ih: 120pt, al: right, clr: c-born),
   ev(1998, 5, "down", 2, [MrBeast], image("images/mrbeast.jpg"), src: src.mrbeast, ih: 60pt, clr: c-born),
-  ev(1998, 11, "down", 1, [Half-Life], image("images/half-life.jpg"), src:
-  src.halflife, ih: 90pt, al: right, clr: c-cult),
+  ev(
+    1998,
+    11,
+    "down",
+    1,
+    [Half-Life],
+    image("images/half-life.jpg"),
+    src: src.halflife,
+    ih: 90pt,
+    al: right,
+    clr: c-cult,
+  ),
   ev(1999, 3, "down", 2, [Futurama], image("images/futurama.png"), src: src.futurama, clr: c-cult),
   ev(1999, 6, "down", 1, [Napster], image("images/napster.svg", fit: "contain"), src: src.napster, clr: c-tech),
 )
@@ -83,7 +119,7 @@
 #slides-only()[
   #figure(
     image("images/rossignac.jpg", height: 70%),
-    caption: [Jarek Rossignac.]
+    caption: [Jarek Rossignac.],
   )
   zdroj: #link("http://kelvinkuo.com/wp-content/uploads/2010/03/KKK_6258.jpg")
 ]
@@ -109,24 +145,24 @@
 
 // #rect(height: 1%, stroke: none)
 #columns(2)[
-#pause
-pořadí vertexů
+  #pause
+  pořadí vertexů
 
   [V1 V2 V3]\
-#pause
+  #pause
   [V1 V3 V2]\
   [V2 V1 V3]\
   [V3 V1 V2]\
   [V2 V3 V1]\
   [V3 V2 V1]
 
-#colbreak()
+  #colbreak()
 
-#pause
-CLERS řetězec
+  #pause
+  CLERS řetězec
 
-#pause
-CLRSLRCLEE
+  #pause
+  CLRSLRCLEE
 ]
 
 == Klasifikace
@@ -136,20 +172,17 @@ CLRSLRCLEE
 #figure(
   rect(height: 90%, stroke: none)[
     #grid(
-  columns: 3,
-  CLERS.C,
-  CLERS.L,
-  CLERS.R,
-)
+      columns: 3,
+      CLERS.C, CLERS.L, CLERS.R,
+    )
 
     #grid(
-  columns: 2,
-  CLERS.S,
-  CLERS.E,
-)
-],
+      columns: 2,
+      CLERS.S, CLERS.E,
+    )
+  ],
 
-caption: [Základní CLERS operace.]
+  caption: [Základní CLERS operace.],
 )
 
 = Komprese
@@ -168,7 +201,6 @@ vyšším genusem.
 #figure(
   alternatives(..anim1.comp.map(draw.with(size: (80%, 80%)))),
   caption: [Jednoduchá komprese.],
- 
 )
 
 == Výsledný soubor
@@ -182,7 +214,7 @@ Kódování: C = 0, S = 100, R = 101, L = 110, E = 111
 
 #pause
 (CLERS) 0110111101100 bitové pole: #rect()[#text(size: 0.95em)[00101101 10110011
-00101100 11110110 11111100 10110110 10101101 101111]]
+  00101100 11110110 11111100 10110110 10101101 101111]]
 
 
 = Dekomprese
@@ -237,26 +269,27 @@ Následuje S => push topologie se "zipem".
   let items = ()
   for f in query(figure) {
     if f.caption == none { continue }
-    let id = repr(f.caption.body)          // same caption = same figure
+    let id = repr(f.caption.body) // same caption = same figure
     if id not in seen {
       seen.push(id)
-      items.push(f)                        // first occurrence = first subslide
+      items.push(f) // first occurrence = first subslide
     }
   }
   for (i, f) in items.enumerate() {
     let loc = f.location()
     link(loc)[
-      Figure #(i + 1): #f.caption.body
+      Obrázek #(i + 1): #f.caption.body
       #box(width: 1fr, repeat[.])
       // touying shows THE slide
       #utils.slide-counter.at(loc).first()
+      // #loc.page()
     ]
     linebreak()
   }
 }
 
 
-== Seznam _figures_
+== Seznam obrázků 
 
 #figure-outline()
 
@@ -275,4 +308,3 @@ Wrap & Zip @rossignac1999wrapzipreport
 Inspirace animací @eb-slides
 
 #bibliography("./refs.bib", title: none, style: "ieee")
-
