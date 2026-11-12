@@ -98,7 +98,7 @@ namespace Apg_ex.Excercises.Ex05
         {
             // set second pass framebuffer
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, secondPass.ID);
-            ClearImage();
+            ClearImageBlack();
 
             // use occlusion filter shader
             occlusionShader.Use();
@@ -121,7 +121,7 @@ namespace Apg_ex.Excercises.Ex05
         /// <param name="iterations"> number of iterations </param>
         public void PostProcessHoleFill(int iterations = 10)
         {
-            ClearImage();
+            ClearImageBlack();
 
             FrameBuffer srcFB = secondPass; // starting with processing the second pass
             FrameBuffer dstFB = swapPass; // empty for now - will draw into it
@@ -129,22 +129,39 @@ namespace Apg_ex.Excercises.Ex05
             // use hole filling shader
             holefillingShader.Use();
             holefillingShader.SetUniforms(Matrix4.Identity, Matrix4.Identity);
-
+                              
             // iterate !!
             for (int i = 0; i < iterations; i++)
             {
                 // TODO
+                ((PostProcessingPCShader)holefillingShader).SetHolefillUniforms(
+                srcFB.colorBuffer,
+                srcFB.depthBuffer,
+                new Vector3(0f, 0f, 0f), // background was cleared with black
+                new Vector2(1.0f / width, 1.0f / height));
+
 
                 // on the final iteration render to the screen (bind FBO 0)
                 // else bind FBO dstFB
                 // - do not forget to clear the screen
-                
+                if (i == iterations - 1)
+                {
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                }else
+                {
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, dstFB.ID);
+                }
+                ClearImageBlack();
+
                 // use hole filling shader
                 // draw plane
+                plane.Draw(holefillingShader);
 
                 // swap source and destination framebuffers for the next pass
+                FrameBuffer tmp = srcFB;
+                srcFB = dstFB; dstFB = tmp;
+                //srcFB = dstFB;
             }
-
         }
     }
 }

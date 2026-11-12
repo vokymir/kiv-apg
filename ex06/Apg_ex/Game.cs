@@ -158,12 +158,12 @@ namespace OpenTK_tutorial
         private void RenderScene()
         {
             // draw PC
-            ex06.Draw(view, projection);
+            //ex06.Draw(view, projection);
 
             // draw PC and post process
-            // ex06.RenderFirstPass(view, projection);
-            // ex06.PostProcessOcclusion();
-            // ex06.PostProcessHoleFill();
+             ex06.RenderFirstPass(view, projection);
+             ex06.PostProcessOcclusion();
+             ex06.PostProcessHoleFill();
         }
 
     }
