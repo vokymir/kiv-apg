@@ -231,7 +231,8 @@ Demonstrováno na wrap&zip, je intuitivnější.
 
 #figure(
   alternatives(..anim3.decomp.map(draw.with(size: (80%, 80%)))),
-  caption: [Dekomprese.],
+  caption: [Dekomprese. TODO: trojúhelník L (2,8,16) je taky třeba zipnout!
+  Ideálně nakreslit sem i šipky (free left/free right).],
 )
 
 = Vyšší genus

@@ -29,8 +29,8 @@
   T(8, 9, 10, clr: black, hole: true), // hole: its edges count as border
   next,
   gate(1, 2),
-  clers(1, 2, 8, "S"),
-  add-h("S"),
+  clers(1, 2, 8, "C"),
+  add-h("C"),
   next,
   show-v(8),
   show-v(9),
