@@ -110,6 +110,14 @@ namespace Excercises
             // render plane using volumeShader
             // - do not forget to set uniforms !! - textures and view and projection matrices
             // drawing on a display plane
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            ClearImage();
+
+            shader.Use();
+            ((VolumeShader)shader).SetUniforms(view, projection,firstPass.colorBuffer, secondPass.colorBuffer, headVolumeData.ID);
+            plane.Draw(shader);
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
         }
 
